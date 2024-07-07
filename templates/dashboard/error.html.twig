@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Error{% endblock %}
+
+{% block body %}
+    <ul>
+    {%for error in errors%}
+        <li><p>{{error}}</p></li>
+    {%endfor%}
+    </ul>
+{% endblock %}

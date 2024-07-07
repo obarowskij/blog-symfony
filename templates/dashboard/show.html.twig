@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{post.title}}{% endblock %}
+
+{% block body %}
+    Post by: {{user.email}} <br>
+    Tags:
+    {%if app.user and app.user.email == user.email %}
+        <a href="{{ path('post_delete', {id: post.id}) }}">Delete</a>
+        <a href="{{ path('post_edit', {id: post.id}) }}">Edit post</a>
+        <ul>
+            {% for tag in tags %}
+                <li>{{ tag.title }}</li>
+                {{ form_start(deleteTagForms[tag.id]) }}
+                <button type="submit" class="btn btn-danger">Remove</button>
+                {{ form_end(deleteTagForms[tag.id]) }}
+            {% endfor %}
+        </ul>
+        {{ form_start(tagForm) }}
+        {{ form_row(tagForm.title) }}
+        <button class="btn">{{ button_label|default('Save') }}</button>
+        {{ form_end(tagForm) }}
+    {% else %}
+    <ul>
+        {% for tag in tags %}
+            <li>{{ tag.title }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %} 
+    <h2>{{ post.title }}</h2>
+    <p>{{ post.content }}</p>
+    <p>Likes: {{ likes }}</p>
+    {% if app.user %}
+            {% if hasLiked %}
+                {{ form_start(dislikeForm) }}
+                {{ form_end(dislikeForm) }}
+            {% else %}
+                {{ form_start(likeForm) }}
+                {{ form_end(likeForm) }}
+            {% endif %}
+    {% else %}
+        <p>You have to be logged in to like a post</p>
+    {% endif %}
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in comments %}
+            <li>
+                <strong>{{ comment.user.email }}</strong>:
+                {{ comment.content }}
+            </li>
+        {% endfor %}
+    </ul>
+{% if app.user %}
+    <h2>Add a Comment</h2>
+    {{ form_start(form) }}
+        {{ form_row(form.content) }}
+        <button class="btn">Submit</button>
+    {{ form_end(form) }}
+{% else %}
+You have to be logged in to add comments
+{% endif %}
+{% endblock %}
